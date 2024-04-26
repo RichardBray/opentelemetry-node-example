@@ -1,0 +1,10 @@
+services:
+  jaeger:
+    container_name: jaeger-n
+    image: jaegertracing/all-in-one:latest
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - '16686:16686'
+      - '4318:4318'
+    command: ['--log-level=debug']
