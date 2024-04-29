@@ -9,12 +9,9 @@ export async function addHttpRequestTraces(c: Context<Env, never, {}>, next: Nex
     attributes: { key: JSON.stringify(queryParams) },
   });
   span.addEvent("invoking http-request");
-
   await next();
-
   span.end();
 }
-
 
 export async function incrementHttpRequestCounter(c: Context<Env, never, {}>, next: Next) {
   const meter = opentelemetry.metrics.getMeter('http-server');
@@ -23,8 +20,6 @@ export async function incrementHttpRequestCounter(c: Context<Env, never, {}>, ne
     description: 'Count of all HTTP requests',
   });
   const label = { route: `${c.req.path}=${JSON.stringify(queryParams)}` };
-
   requestCounter.add(1, label);
-
   await next();
 }
