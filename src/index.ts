@@ -1,23 +1,25 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { rollTheDice } from './dice';
+import { addHttpRequestTraces } from './middleware';
 import opentelemetry from '@opentelemetry/api';
 
 const app = new Hono();
 
 app.use(async (c, next) => {
-  const tracer = opentelemetry.trace.getTracer('http-server');
+  const meter = opentelemetry.metrics.getMeter('http-server');
   const queryParams = c.req.query();
-  const span = tracer.startSpan('http-request', {
-    kind: 1,
-    attributes: { key: JSON.stringify(queryParams) },
+  const requestCounter = meter.createCounter('http_requests', {
+    description: 'Count of all HTTP requests',
   });
-  span.addEvent('invoking http-request');
+  const label = { route: `${c.req.path}=${JSON.stringify(queryParams)}` };
+
+  requestCounter.add(1, label);
 
   await next();
-
-  span.end();
 });
+
+app.use(addHttpRequestTraces);
 
 app.get('/', (c) => {
   return c.text('Welcome to dice roll');
