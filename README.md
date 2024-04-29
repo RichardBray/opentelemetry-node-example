@@ -8,7 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-- Node.js (Bun)
+- Node.js (Note: OpenTelemetry currently does not support Bun and Deno)
 - npm
 - Docker
 
@@ -29,16 +29,12 @@ cd dice-roll-service
 
 ```sh
 npm install
-# or
-bun install
 ```
 
 4. Start the development server
 
 ```sh
 npm run dev
-# or
-bun dev
 ```
 
 5. Run docker-compose to start Prometheus and Jaeger servers
