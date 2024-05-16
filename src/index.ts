@@ -1,17 +1,17 @@
-import { serve } from "@hono/node-server";
-import { Hono } from "hono";
-import mongoose from "mongoose";
-import opentelemetry from "@opentelemetry/api";
-import { Person } from "./model";
+import { serve } from '@hono/node-server';
+import { Hono } from 'hono';
+import mongoose from 'mongoose';
+import opentelemetry from '@opentelemetry/api';
+import { Person } from './model';
 
-mongoose.connect("mongodb://localhost:27017/people");
+mongoose.connect('mongodb://localhost:27017/people');
 
 const app = new Hono();
 
 app.use(async (c, next) => {
-  const httpTracer = opentelemetry.trace.getTracer("http-server");
+  const httpTracer = opentelemetry.trace.getTracer('http-server');
   const queryParams = c.req.query();
-  const span = httpTracer.startSpan("http-request", {
+  const span = httpTracer.startSpan('http-request', {
     kind: 1,
     attributes: { key: JSON.stringify(queryParams) },
   });
@@ -19,16 +19,16 @@ app.use(async (c, next) => {
   span.end();
 });
 
-app.get("/", (c) => {
-  return c.text("Welcome to the person all");
+app.get('/', (c) => {
+  return c.text('Welcome to the person all');
 });
 
-app.get("/person", async (c) => {
+app.get('/person', async (c) => {
   const people = await Person.find();
   return c.json(people, 200);
 });
 
-app.post("/person", async (c) => {
+app.post('/person', async (c) => {
   const data = await c.req.json();
 
   const person = await Person.create({
