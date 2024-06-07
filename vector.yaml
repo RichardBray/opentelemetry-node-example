@@ -1,0 +1,30 @@
+sources:
+  better_stack_prometheus_source:
+    type: "prometheus_remote_write"
+    address: "0.0.0.0:9090"
+
+transforms:
+  better_stack_prometheus_log_transform:
+    type: "metric_to_log"
+    inputs:
+      - "better_stack_prometheus_source"
+
+  better_stack_prometheus_transform:
+    type: "remap"
+    inputs:
+      - "better_stack_prometheus_log_transform"
+    source: |
+      .dt = del(.timestamp)
+      string_name = string(.name) ?? ""
+      if (ends_with(string_name, "_total") || ends_with(string_name, "_sum") || ends_with(string_name, "_counter")) && is_object(.gauge) {
+        .counter.value = del(.gauge.value)
+        del(.gauge)
+      }
+
+sinks:
+  sink_id:
+    type: console
+    inputs:
+      - better_stack_prometheus_transform
+    encoding:
+      codec: json

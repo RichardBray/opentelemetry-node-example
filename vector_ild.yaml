@@ -1,0 +1,27 @@
+sources:
+  my_server_logs:
+    type: file
+    include:
+      - /var/log/app.log
+
+transforms:
+  remap_logs:
+    type: remap
+    inputs:
+      - my_server_logs
+    source: |-
+      . = parse_json!(.message)
+  my_log_transformation:
+    type: sample
+    inputs:
+      - remap_logs
+    rate: 200
+    exclude: ".level == 30"
+
+sinks:
+  sink_id:
+    type: console
+    inputs:
+      - my_log_transformation
+    encoding:
+      codec: json

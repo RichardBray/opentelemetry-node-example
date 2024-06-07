@@ -1,20 +1,26 @@
 services:
-  jaeger:
-    container_name: jaeger-n # names this way due to conflict
-    image: jaegertracing/all-in-one:latest
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-    ports:
-      - '16686:16686'
-      - '4318:4318'
-    command: ['--log-level=debug']
+  # jaeger:
+  #   container_name: jaeger-n # names this way due to conflict
+  #   image: jaegertracing/all-in-one:latest
+  #   environment:
+  #     - COLLECTOR_OTLP_ENABLED=true
+  #   ports:
+  #     - "16686:16686"
+  #     - "4318:4318"
+  #   command: ["--log-level=debug"]
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
     ports:
-      - '9090:9090'
+      - "9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     command:
-      - --enable-feature=otlp-write-receiver
+      # - --enable-feature=otlp-write-receiver
       - --config.file=/etc/prometheus/prometheus.yml
+  vector:
+    image: timberio/vector:0.37.1-debian
+    container_name: vector
+    volumes:
+      - ./vector.yaml:/etc/vector/vector.yaml
+    network_mode: "host"
