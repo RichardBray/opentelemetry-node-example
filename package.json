@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "dev": "node --import tsx --require ./src/instrumentation.ts src/index.ts"
+    "dev": "node --import tsx --require ./src/instrumentation.ts src/index.ts",
+    "build": "tsc --outDir dist",
+    "start": "node --experimental-specifier-resolution=node dist/index.js"
   },
   "dependencies": {
     "@hono/node-server": "^1.11.0",
@@ -17,6 +19,7 @@
   "type": "module",
   "devDependencies": {
     "@types/node": "^20.11.17",
-    "tsx": "^4.7.1"
+    "tsx": "^4.7.1",
+    "typescript": "^5.4.5"
   }
 }
