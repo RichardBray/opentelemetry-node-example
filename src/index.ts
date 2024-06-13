@@ -18,8 +18,8 @@ app.use(addHttpRequestTraces);
 app.get("/", (c) => {
   logger.emit({
     severityNumber: SeverityNumber.INFO,
+    severityText: "INFO",
     body: "This is a test message",
-    attributes: { "log.attr": "test attribute" },
   });
   return c.text("Welcome to dice roll");
 });
@@ -27,8 +27,18 @@ app.get("/", (c) => {
 app.get("/roll", (c) => {
   const rolls = Number(c.req.query("rolls"));
   if (isNaN(rolls)) {
+    logger.emit({
+      severityNumber: SeverityNumber.ERROR,
+      severityText: "ERROR",
+      body: "'rolls' is missing or not a number.",
+    });
     return c.json({ error: "'rolls' is missing or not a number." }, 400);
   }
+  logger.emit({
+    severityNumber: SeverityNumber.INFO,
+    severityText: "INFO",
+    body: `No of dice rolls requested: ${rolls}`,
+  });
   return c.json({ result: JSON.stringify(rollTheDice(rolls)) }, 200);
 });
 
