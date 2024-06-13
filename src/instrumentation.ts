@@ -13,8 +13,7 @@ loggerProvider.addLogRecordProcessor(new SimpleLogRecordProcessor(new ConsoleLog
 const logger = loggerProvider.getLogger("default");
 
 const sdk = new NodeSDK({
-  traceExporter: new OTLPTraceExporter(),
-  metricReader: new PrometheusExporter(),
+  metricReader: [new PrometheusExporter()],
   instrumentations: [getNodeAutoInstrumentations()],
   views: [],
   resource: new Resource({
