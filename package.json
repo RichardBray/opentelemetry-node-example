@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "node --import tsx --require ./src/instrumentation.ts src/index.ts",
+    "dev": "node --import tsx src/index.ts",
     "build": "tsc --outDir dist",
     "start": "node --experimental-specifier-resolution=node dist/index.js"
   },
@@ -11,14 +11,8 @@
     "@opentelemetry/exporter-prometheus": "^0.51.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.51.0",
     "@opentelemetry/resources": "^1.24.0",
-<<<<<<< Updated upstream
     "@opentelemetry/sdk-logs": "^0.52.0",
     "@opentelemetry/sdk-node": "^0.50.0",
-=======
-    "@opentelemetry/sdk-metrics": "^1.24.1",
-    "@opentelemetry/sdk-node": "^0.50.0",
-    "@opentelemetry/sdk-trace-node": "^1.24.1",
->>>>>>> Stashed changes
     "@opentelemetry/semantic-conventions": "^1.24.0",
     "hono": "^4.2.7"
   },

@@ -21,7 +21,7 @@ app.get("/", (c) => {
     severityText: "INFO",
     body: "This is a test message",
   });
-  return c.text("Welcome to dice roll");
+  return c.html(`<h1>Welcome to my app</h1>`);
 });
 
 app.get("/roll", (c) => {
