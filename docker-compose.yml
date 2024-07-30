@@ -1,13 +1,9 @@
+
+volumes:
+  prometheus-data:
+    driver: local
+
 services:
-  jaeger:
-    container_name: jaeger
-    image: jaegertracing/all-in-one:latest
-    environment:
-      - COLLECTOR_OTLP_ENABLED=true
-    ports:
-      - '16686:16686'
-      - '4318:4318'
-    command: ['--log-level=debug']
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
@@ -15,6 +11,17 @@ services:
       - '9090:9090'
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus-data:/prometheus
     command:
       - --enable-feature=otlp-write-receiver
       - --config.file=/etc/prometheus/prometheus.yml
+
+  # node_exporter:
+  #   image: quay.io/prometheus/node-exporter:latest
+  #   container_name: node_exporter
+  #   command:
+  #     - '--path.rootfs=/host'
+  #   pid: host
+  #   restart: unless-stopped
+  #   volumes:
+  #     - '/:/host:ro'

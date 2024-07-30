@@ -1,12 +1,11 @@
 import { serve } from '@hono/node-server';
 import { Hono } from 'hono';
 import { rollTheDice } from './dice';
-import { incrementHttpRequestCounter, addHttpRequestTraces } from './middleware';
+import { incrementHttpRequestCounter } from './middleware';
 
 const app = new Hono();
 
 app.use(incrementHttpRequestCounter);
-app.use(addHttpRequestTraces);
 
 app.get('/', (c) => {
   return c.text('Welcome to dice roll');
