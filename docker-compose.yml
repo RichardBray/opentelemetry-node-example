@@ -4,6 +4,7 @@ volumes:
     driver: local
 
 services:
+
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
@@ -16,12 +17,21 @@ services:
       - --enable-feature=otlp-write-receiver
       - --config.file=/etc/prometheus/prometheus.yml
 
-  # node_exporter:
-  #   image: quay.io/prometheus/node-exporter:latest
-  #   container_name: node_exporter
-  #   command:
-  #     - '--path.rootfs=/host'
-  #   pid: host
-  #   restart: unless-stopped
-  #   volumes:
-  #     - '/:/host:ro'
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    ports:
+      - "5000:3000"
+    volumes:
+      - ./grafana-data:/var/lib/grafana
+    restart: unless-stopped
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node_exporter
+    command:
+      - '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro'
