@@ -1,9 +1,23 @@
-
-volumes:
-  prometheus-data:
-    driver: local
-
 services:
+  node_exporter:
+    container_name: node_exporter
+    image: prom/node-exporter:latest
+    command:
+      - '--path.rootfs=/host'
+    pid: host
+    volumes:
+      - '/:/host:ro'
+
+  blackbox_exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox_exporter
+    privileged: true  # Add this line
+    ports:
+      - "9115:9115"  # Add this line
+    command:
+      - "--config.file=/config/blackbox.yml"
+    volumes:
+      - ./blackbox.yml:/config/blackbox.yml
 
   prometheus:
     container_name: prometheus
@@ -14,24 +28,12 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ./prometheus-data:/prometheus
     command:
-      - --enable-feature=otlp-write-receiver
       - --config.file=/etc/prometheus/prometheus.yml
 
   grafana:
-    image: grafana/grafana-enterprise
     container_name: grafana
+    image: grafana/grafana-oss:latest
     ports:
       - "5000:3000"
     volumes:
       - ./grafana-data:/var/lib/grafana
-    restart: unless-stopped
-
-  node_exporter:
-    image: quay.io/prometheus/node-exporter:latest
-    container_name: node_exporter
-    command:
-      - '--path.rootfs=/host'
-    pid: host
-    restart: unless-stopped
-    volumes:
-      - '/:/host:ro'

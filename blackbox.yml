@@ -1,0 +1,12 @@
+modules:
+  icmp:
+    prober: icmp
+    timeout: 5s
+    icmp:
+      preferred_ip_protocol: ip4
+  http_2xx:  # You can name this whatever you want
+    prober: http
+    http:
+      preferred_ip_protocol: ip4  # Optional: prefer IPv4
+      valid_status_codes: []  # Empty array means all status codes will be reported
+      fail_if_not_ssl: false # Optional: fail if not HTTPS
